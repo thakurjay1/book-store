@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  bookstore-api:
+    build:
+      context: .
+    image: book-store
+    container_name: bookstore-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      spring.datasource.url: jdbc:mysql://mysql:3306/bookstoredb?createDatabaseIfNotExist=true
+      spring.datasource.username: root
+      spring.datasource.password: root
+      spring.jpa.hibernate.ddl-auto: update
+    networks:
+      - bookstore-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: bookstore-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bookstoredb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+    networks:
+      - bookstore-network
+
+volumes:
+  mysql-data:
+
+networks:
+  bookstore-network:
+    driver: bridge
