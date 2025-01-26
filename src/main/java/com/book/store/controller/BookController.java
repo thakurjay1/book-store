@@ -33,17 +33,20 @@ public class BookController {
 
 	@GetMapping("/search")
 	public List<Book> searchBooks(@RequestParam String title, @RequestParam String author) {
+		System.out.println("Initiated Searching Books");
 		return bookService.searchBooks(title, author);
 	}
 
 	@GetMapping
 	public Page<Book> getAllBooks(@RequestParam int page, @RequestParam int size) {
 		Pageable pageable = PageRequest.of(page, size);
+		System.out.println("Getting All Books");
 		return bookService.getAllBooks(pageable);
 	}
 
 	@DeleteMapping("/{isbn}")
 	public HttpStatus deleteBook(@PathVariable String isbn) {
+		System.out.println("Deletings books by isbn number");
 		bookService.deleteBook(isbn);
 		return HttpStatus.NO_CONTENT;
 	}
